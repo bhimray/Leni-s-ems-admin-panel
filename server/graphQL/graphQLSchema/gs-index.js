@@ -25,7 +25,7 @@ type Order{
   service:String!
   user:String!
 }
-type adminInputType implements loginInterface{
+type adminRegisterType implements loginInterface{
   name:String
   email:String!
   password:String!
@@ -36,10 +36,20 @@ type authDataType{
   token:String!
   tokenExpiration:String!
 }
+type createOrderType{
+  numberOfItems:Int!
+  status:Boolean!
+  customer:createUserType!
+  deliveryTime:String!
+  comment:String!
+}
 
 
-
-input adminInput{
+input createOrderInput{
+  numberOfItems:Int!
+  comment:String!
+}
+input adminRegisterInput{
   name:String
   email:String!
   password:String!
@@ -57,16 +67,17 @@ input createUserInputData {
 
 
 
+
 type RootQuery {
-  adminLogin(adminInput:adminInput):authDataType
+  adminLogin(adminInput:adminRegisterInput):authDataType
   login(loginInput: loginInput): loginType!
   order(id:String):[Order]
 }
 
 type RootMutation {
-  adminRegister(adminInput:adminInput):adminInputType
+  adminRegister(adminInput:adminRegisterInput):adminRegisterType
   createUser(createUserInput: createUserInputData): createUserType
-  createOrder(name:String, amount:String, service:String, user:String):Order
+  createOrder(createOrderInput: createOrderInput):createOrderType
 }
 
 
