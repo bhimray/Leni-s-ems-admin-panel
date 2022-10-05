@@ -1,16 +1,24 @@
 const mongoose = require('mongoose');
 
 const orderSchema = mongoose.Schema({
-  name: { type: String, required: true },
-  amount: { 
-    type: String, 
+  status: { 
+    type:String,
+    enum: ['Received','Processing','Completed'], 
+    required: true,
+    default:'Received',
+  },
+  numberOfItems: { 
+    type:String, 
     },
-  service: {
+  customer: {
     type: String,
   },
-  user: {
+  comment: {
     type: String,
   },
+  deliveryTime:{
+    type:String,
+  }
 }
 );
 

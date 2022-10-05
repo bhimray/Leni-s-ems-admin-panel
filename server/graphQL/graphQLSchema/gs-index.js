@@ -37,16 +37,16 @@ type authDataType{
   tokenExpiration:String!
 }
 type createOrderType{
-  numberOfItems:Int!
-  status:Boolean!
-  customer:createUserType!
+  numberOfItems:String!
+  status:String!
+  customer:String!
   deliveryTime:String!
-  comment:String!
+  comment:String
 }
 
 
 input createOrderInput{
-  numberOfItems:Int!
+  numberOfItems:String!
   comment:String!
 }
 input adminRegisterInput{

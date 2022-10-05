@@ -1,13 +1,14 @@
 const express = require('express')
 const {graphqlHTTP} = require('express-graphql')
 const mongoose = require('mongoose')
-const bodyparser = require('body-parser')
+const bodyParser = require('body-parser')
 require('dotenv').config()
 
 
 //importing components
 const graphqlSchema = require('./graphQL/graphQLSchema/gs-index')
 const graphqlResolvers = require('./graphQL/graphQLResolvers/gr-index')
+const checkAuthorized = require('./middleware/checkAuthorized')
 
 //
 const app = express();
@@ -15,6 +16,15 @@ const app = express();
 //importing .env file
 const MONGO_DB = process.env.MONGO_URI;
 const port = process.env.PORT || 8000;
+
+app.use(bodyParser.json(),(req, res, next)=>{
+  console.log(req.header, "is the header")
+  next()
+})
+
+// checking if the user is authenticated or not
+app.use(checkAuthorized)
+// console.log(req.header, "is the header")
 
 //importing graphql
 app.use(
