@@ -7,12 +7,14 @@ const MONGO_DB = process.env.MONGO_URI;
 
 module.exports = {
     createUser: async args => {
+        console.log("hi, create user")
+        console.log(args,args.password,'this is args in inside the createUser')
         try {
-            const hashedPassword = await bcrypt.hash(args.createUserInput.password, 12);
+            const hashedPassword = await bcrypt.hash(args.password, 12);
             console.log("password is hashed", typeof(hashedPassword))
             const user = await User({
-                name: args.createUserInput.name,
-                email: args.createUserInput.email,
+                name: args.name,
+                email: args.email,
                 password: hashedPassword
             });
             console.log(user)
@@ -38,8 +40,9 @@ module.exports = {
     },
 
     login: async (args) => {
-        const email= args.loginInput.email
-        const password = args.loginInput.password
+        console.log(args, "this is args in login")
+        const email= args.email
+        const password = args.password
 
         const user = await mongoose.connect(MONGO_DB).then(()=>{
             return User.findOne({ email: email });
@@ -53,12 +56,12 @@ module.exports = {
             throw new Error('Password is incorrect!');
         }
         const token = jwt.sign(
-            { userId: user.id, email: user.email },
-            'somesupersecretkey',
+            { user: user.id, email: user.email },
+            'r38ridnfksdlfei48t94r9rf4r92m',
             {
                 expiresIn: '1h'
             }
         );
-        return { userId: user.id, token: token, tokenExpiration: 1 };
+        return { user: user.id, token: token, tokenExpiration: 1 };
     }
 };

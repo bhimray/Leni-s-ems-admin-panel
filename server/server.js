@@ -2,6 +2,7 @@ const express = require('express')
 const {graphqlHTTP} = require('express-graphql')
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
+const cors = require('cors')
 require('dotenv').config()
 
 
@@ -12,18 +13,23 @@ const checkAuthorized = require('./middleware/checkAuthorized')
 
 //
 const app = express();
-
+app.use((req, res, next)=>{
+  res.setHeader('Access-Control-Allow-Origin', '*')
+  res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  if (req.method=== 'OPTIONS'){
+    return res.sendStatus(200)
+  }
+  next();
+})
 //importing .env file
 const MONGO_DB = process.env.MONGO_URI;
 const port = process.env.PORT || 8000;
 
-app.use(bodyParser.json(),(req, res, next)=>{
-  console.log(req.header, "is the header")
-  next()
-})
+app.use(bodyParser.json())
 
 // checking if the user is authenticated or not
-app.use(checkAuthorized)
+// app.use(checkAuthorized)
 // console.log(req.header, "is the header")
 
 //importing graphql
@@ -32,7 +38,6 @@ app.use(
     graphqlHTTP({
       schema: graphqlSchema,
       rootValue:graphqlResolvers,
-      graphiql: true
     })
 )
 async function run() {
@@ -53,7 +58,7 @@ const start = async () => {
       console.log(`Server is listening on port ${port}...`)
     );
   } catch (error) {
-    console.log(error);
+    console.log(error, "this is server error");
   }
 };
 

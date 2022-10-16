@@ -69,14 +69,14 @@ input createUserInputData {
 
 
 type RootQuery {
-  adminLogin(adminInput:adminRegisterInput):authDataType
-  login(loginInput: loginInput): loginType!
+  adminLogin(email:String, password:String):authDataType
   order(id:String):[Order]
 }
 
 type RootMutation {
   adminRegister(adminInput:adminRegisterInput):adminRegisterType
-  createUser(createUserInput: createUserInputData): createUserType
+  createUser(name:String, email:String, password:String): createUserType
+  login(email:String, password:String): authDataType
   createOrder(createOrderInput: createOrderInput):createOrderType
 }
 

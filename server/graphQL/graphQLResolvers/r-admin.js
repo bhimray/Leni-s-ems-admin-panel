@@ -58,7 +58,7 @@ module.exports = {
         }
         const token = jwt.sign(
             { userId: admin.id, email: admin.email },
-            'dfsdk4$rsas8d#r38ridnfksdlfei48t94r9rf4r92m#e8d@',
+            'r38ridnfksdlfei48t94r9rf4r92m',
             {
                 expiresIn: '0.5h'
             }
