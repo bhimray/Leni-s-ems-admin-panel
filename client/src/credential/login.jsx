@@ -3,7 +3,7 @@ import {useReducer,useEffect} from 'react'
 import { gql, useMutation, useLazyQuery } from '@apollo/client';
 import {useContext, useState} from 'react'
 import { AuthContext } from '../context/authContext';
-import { useNavigate } from 'react-router-dom';
+import { redirect, useNavigate} from 'react-router-dom';
 
 const initialState = {name:'', email:'', password:''}
 
@@ -31,14 +31,10 @@ const reducer=(state, action)=>{
   
 const Login = () => {
     const context = useContext(AuthContext)
-    let navigate = useNavigate()
-    const [errors, setErrors] = useState('')
+    const navigate = useNavigate()
+    // const [errors, setErrors] = useState('')
     const [state, dispatch] = useReducer(reducer,initialState)
     
-    const variables = {
-      email:state.email,
-      password:state.password,
-    }
     const[submitFormData, {data,loading, error }] = useMutation(FORM_QUERY,
       {
       variables:{
@@ -53,14 +49,21 @@ const Login = () => {
       if (data) {
         context.login(data)
         console.log(data, "user logged in data")
-        navigate("/");
       }
     }, [data]);
+
+    // const redirectHomePage=async()=>{
+    //   try{
+    //     console.log("navigating to homepage")
+    //     await navigate("/",{replace:true});
+    //   } catch(err){
+    //     console.log(err)
+    //   }  
+    // }
 
   return (
     <div>
         <form onSubmit={(e) =>{e.preventDefault();submitFormData()}} action="">
-            {/* <input placeholder='username' type="text" onChange={(e) => dispatch({type: 'name',payload:e.target.value})}/> */}
             <input placeholder='email' type="text" onChange={(e) => dispatch({ type: 'email', payload: e.target.value })}/>
             <input placeholder='password' type="text" onChange={(e) => dispatch({type: 'password', payload:e.target.value})}/>
             <button type="submit" className="submitButton">submit</button>

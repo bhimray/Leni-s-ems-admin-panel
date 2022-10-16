@@ -1,16 +1,13 @@
-import React from 'react';
-import logo from './logo.svg';
+import React,{useContext, useEffect} from 'react';
 import './App.css';
 import FTHeading from './components/f-top/ft-heading';
 import FBIndex from './components/f-bottom/fb-index';
 import Cindex from './credential/c-index';
-// import { QueryClient, QueryClientProvider } from 'react-query';
 import {ApolloProvider, ApolloClient,createHttpLink, InMemoryCache} from '@apollo/client'
 import {setContext} from '@apollo/client/link/context'
-import { AuthProvider } from './context/authContext';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Login from './credential/login';
-import Signup from './credential/signup';
+import { AuthProvider, AuthContext } from './context/authContext';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import MainBoard from './components/mainBoard';
 
 //httplink.....
 const htttpLink = createHttpLink({
@@ -31,24 +28,21 @@ const queryClient = new ApolloClient({
   cache:new InMemoryCache(),
 })
 
+// useEffect({
+
+// },[user])
 function App() {
+  const {user} = useContext(AuthContext)
+  console.log(user, "in the app.jsx")
   return (
     <AuthProvider>
       <ApolloProvider client ={queryClient}>
-
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<h1>This is Home Page</h1>}/>
-            <Route path='/signin' element={<Login/>}/>
-            <Route path='/signup' element={<Signup/>}/>
+            <Route path="/" element={<MainBoard/>}/>
+            <Route path='/signin' element={<Cindex/>}/>
           </Routes>
-        </BrowserRouter>
-
-        <div className="App">
-          <FTHeading/>
-          <FBIndex/>
-          <Cindex/>
-        </div>
+        </BrowserRouter> 
       </ApolloProvider>
     </AuthProvider>
   );

@@ -6,8 +6,9 @@ const initialState={ // this is the initial state of the user
     user:null
 }
 if (localStorage.getItem('token')){// checking whether the token valid or expired if yes then assigning the token to the user
+    console.log(localStorage.getItem('token'))
     const decodeToken = jwtDecode(localStorage.getItem('token'));
-    
+    console.log('decodedToken', decodeToken)
     if (decodeToken.exp*1000 < Date.now()){
         localStorage.removeItem('token')
     }else{
@@ -18,10 +19,11 @@ if (localStorage.getItem('token')){// checking whether the token valid or expire
 const AuthContext = createContext({ // creating the context and initializing the intial value for the variables
     user:null,
     login:(userData)=>{},//this function belongs to the function inside the authprovider
-    logout:()=>{}
+    logOut:()=>{}
 })
 
 function  authReducer(state, action){ // creating reducer function to update the value of the state
+    console.log(action.payload, "this is ACTION.PAYLOAD")
     switch(action.type){
         case 'LOGIN':
             return{
@@ -42,8 +44,8 @@ function AuthProvider(props){ // creating function to login and logout the user 
     const [state, dispatch] = useReducer(authReducer, initialState);
 
     const login = (userData)=>{ // logging  the user from the login details and storing token in browser with the help of reducer function
-        // console.log(userData, 'this is returned value')
-        localStorage.setItem('token', userData.token)
+        console.log(userData,'this is returned value')
+        localStorage.setItem('token', userData.login.token)
         dispatch({
             type:'LOGIN',
             payload:userData
@@ -51,6 +53,7 @@ function AuthProvider(props){ // creating function to login and logout the user 
     }
     const logOut = ()=>{ //logging out the user and removing the storage from the browser to logout the user
         localStorage.removeItem('token')
+        console.log(localStorage.removeItem('token'),"remove items")
         dispatch({
             type:'LOGOUT',
         })
@@ -59,7 +62,7 @@ function AuthProvider(props){ // creating function to login and logout the user 
     return(
         <AuthContext.Provider // creating context provider so that value can be trasferred into other coomponent
         value={{user:state.user, login, logOut}}
-        {...props}
+        {...props} // RED FLAG-- i need to understand clearly
         />
     )
 }
